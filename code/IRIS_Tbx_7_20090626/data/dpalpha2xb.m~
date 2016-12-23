@@ -1,0 +1,46 @@
+function dpack = dpalpha2xb(dpack,mse)
+%
+% DPTRANSFORM  Transform alpha vector into xb vector if needed.
+%
+% The IRIS Toolbox 2007/07/27. Copyright 2007 Jaromir Benes. <a href="http://www.iris-toolbox.com">www.iris-toolbox.com</a>
+
+%% function body --------------------------------------------------------------------------------------------
+
+if ~isfield(dpack{5},'U') || isempty(dpack{5}.U)
+  return
+end
+
+U = dpack{5}.U;
+nx = size(dpack{2},1);
+nb = size(U,1);
+nf = nx - nb;
+
+if mse
+  for iloop = 1 : size(dpack{2},4)
+    if iloop <= size(U,3)
+      Ui = U(:,:,iloop);
+    end
+    for t = 1 : size(dpack{2},3)
+      dpack{2}(1:nf,nf+1:end,t,iloop) = dpack{2}(1:nf,nf+1:end,t,iloop)*transpose(Ui);      
+      dpack{2}(nf+1:end,1:nf,t,iloop) = Ui*dpack{2}(nf+1:end,1:nf,t,iloop);
+      dpack{2}(nf+1:end,nf+1:end,t,iloop) = Ui*dpack{2}(nf+1:end,nf+1:end,t,iloop)*transpose(Ui);
+      index = diag(dpack{2}(:,:,t,iloop)) < 0;
+      if any(index)
+        dpack{2}(index,index,t,iloop) = 0;
+      end
+    end
+  end
+else
+  for iloop = 1 : size(dpack{3},3);
+    if iloop <= size(U,3)
+      Ui = U(:,:,iloop);
+    end
+    for t = 1 : size(dpack{2},2)
+      dpack{2}(nf+1:end,t,iloop) = Ui*dpack{2}(nf+1:end,t,iloop);
+    end
+  end
+end
+
+end
+
+%% end of primary function ----------------------------------------------------------------------------------

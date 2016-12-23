@@ -1,0 +1,1 @@
+function [x,dim] = vech(x), [x.data,dim] = reshape_(x.data); end

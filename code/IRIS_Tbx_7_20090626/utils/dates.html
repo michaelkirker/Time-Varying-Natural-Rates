@@ -1,0 +1,71 @@
+<html>
+
+<head>
+  <style type="text/css">
+  body {
+    font-family: arial,helvetica;
+    font-size: large;
+  }
+  h1 {
+    color: #841;
+    font-size:  x-large;
+  }
+  pre, .code {
+    font-family: monospace;
+    font-size: large;
+    color: #841;
+  }
+  </style>
+</head>
+
+<body>
+
+<h1> Dates and date ranges in IRIS</h1>
+<p>
+An IRIS serial date number is just a plain number that represents a particular date. You can create serial date numbers using the following functions (depending on desired periodicity):
+<ul type="disc">
+<li> <span class="code"> yy(year) </span> for annual dates, </li>
+<li> <span class="code"> zz(year,semester) </span> for semiannual dates, </li>
+<li> <span class="code"> qq(year,quarter) </span> for quarterly dates, </li>
+<li> <span class="code"> bb(year,bimonth) </span> for bimonthly dates, </li>
+<li> <span class="code"> mm(year,month) </span> for monthly dates, </li>
+<li> or just plain (integer) numbers for dates with indeterminate periodicity. </li>
+</ul>
+</p>
+
+<p>
+Furthermore, you can use the usual colon operator to produce a specific range, such as
+<pre>
+  rng = qq(1990,1):qq(2010,4);
+</pre>
+</p>
+
+
+<p>
+Finally, you can use the following functions to convert dates to strings and vice versa:
+<ul type="disc">
+<li> <span class="code">dat2str(...)</span>,
+<li> <span class="code">dat2char(...)</span>,
+<li> <span class="code">str2dat(...)</span>.
+</ul>
+
+<p>
+You needn't, in fact, care about the serial date numbers themselves too much, but for you info:
+The integer part of the serial date number is based on the count of periods from (a hypothetical) year 0, say N, whereas its decimal part carries information on periodicity: annual (N + 0.01), semiannual (N + 0.02), quarterly (N + 0.04), bimonthly (N + 0.06), monthly (N + 0.12), or indeterminate (N + 0.00).
+</p>
+
+<p>
+Hence, if you type
+<pre>
+  x = yy(2000)
+</pre>
+you get a serial number 2000.01, while
+<pre>
+  x = qq(2000,1)
+</pre>
+produces 8000.04, i.e. a total of 8000 quarters from year 0 plus 0.04 to specify the periodicity.
+</p>
+
+</body>
+
+</html>

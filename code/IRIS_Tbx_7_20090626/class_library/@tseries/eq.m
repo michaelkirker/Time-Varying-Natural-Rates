@@ -1,0 +1,1 @@
+function x = eq(a,b), x = binop_(@eq,a,b); end

@@ -1,0 +1,1 @@
+* somehow get multiple params from model object

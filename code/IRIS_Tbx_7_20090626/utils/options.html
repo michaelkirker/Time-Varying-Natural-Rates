@@ -1,0 +1,51 @@
+<html>
+
+<head>
+  <style type="text/css">
+  body {
+    font-family: arial,helvetica;
+    font-size: large;
+  }
+  h1 {
+    color: #841;
+    font-size:  x-large;
+  }
+  pre, .code {
+    font-family: monospace;
+    font-size: large;
+    color: #841;
+  }
+  </style>
+</head>
+
+<body>
+<h1>Optional arguments in IRIS functions</h1>
+<p>
+The IRIS functions have usually two types of input arguments. First, you specify the required arguments, which come in a fixed order. After them, you can specify some (or all or none) of the optional arguments. Each optional argument comes as a name-value pair, and you can enter them in any order.
+</p>
+<p>
+Example:
+</p>
+<p>
+One of the input arguments of the <span class="code">hpf</span> function (the Hodrick-Prescott filter) is <span class="code">'lambda'</span>, the smoothing parameter. Its default setting depends on the periodicity of the input times series: it is e.g. <span class="code">1600</span> for quarterly times series (you can check <span class="code">"help tseries/hpf"</span> for all options). Hence, if you run the function without any optional arguments, i.e.
+</p>
+<pre>
+  [xtnd,xgap] = hpf(x,qq(1990,1):qq(2006,4));
+</pre>
+where <span class="code">x</span> is a quarterly times series, you obtain a trend and gap based on this default lambda.
+<p>
+To use a different lambda (say <span class="code">3200</span> instead of <span class="code">1600</span>) you simply need to run
+</p>
+<pre>
+  [xtnd,xgap] = hpf(x,qq(1990,1):qq(2006,4),'lambda',3200);
+</pre>
+instead.
+<pre>
+</pre>
+<p>
+The first two input arguments, i.e. the time series itself and the range, are required. The optional argument(s) then follow(s) the required ones; note also that the  names of optional arguments must be entered as character strings, and hence enclosed in single quotes.
+If you do not specify some of a function's optional arguments, then the default values are used. You can check the default values in on-line help.
+</p>
+</body>
+
+</html>

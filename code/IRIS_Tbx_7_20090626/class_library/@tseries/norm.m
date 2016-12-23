@@ -1,0 +1,1 @@
+function x = norm(x,varargin), x = normalize(x,varargin{:}); end

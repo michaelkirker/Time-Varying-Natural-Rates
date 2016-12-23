@@ -1,0 +1,33 @@
+<html>
+
+<head>
+  <style type="text/css">
+  body {
+    font-family: arial,helvetica;
+    font-size: large;
+  }
+  h1 {
+    color: #841;
+    font-size:  x-large;
+  }
+  pre, .code {
+    font-family: monospace;
+    font-size: large;
+    color: #841;
+  }
+  </style>
+</head>
+
+<body>
+
+<h1> Databases in IRIS</h1>
+<p>
+IRIS databases are, in fact, ordinary Matlab struct objects (see the Matlab documentation for more on the struct class of objects). IRIS uses these struct objects as input and/or output databases in many functions (such as <span class="code">model/simulate</span>). Moreover, there are a number of new functions extending the possibilities of the struct class, such as importing and exporting data from/into CSV files ( <span class="code">dbload</span> and  <span class="code">dbsave</span>), processing batch jobs within databases (<span class="code">dbbatch</span>), etc.
+</p>
+
+<p>
+Check <span class="code">help data/contents</span> for IRIS database functions.
+</p>
+</body>
+
+</html>

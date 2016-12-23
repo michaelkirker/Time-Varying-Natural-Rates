@@ -1,0 +1,1 @@
+function flag = issingle(x), flag = isa(x,'single'); end

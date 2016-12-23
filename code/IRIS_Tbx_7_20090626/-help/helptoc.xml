@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+
+<toc version="1.0">
+
+<tocitem target="index.html">
+
+  <tocitem target="model-code-language.html">Model code language</tocitem>
+  <tocitem target="steady-state-code-language.html">Steady-state code language</tocitem>
+  <tocitem target="qreport-code-language.html">Quick-report code language</tocitem>
+  <tocitem target="model-functions.html">Model functions</tocitem>
+  <tocitem target="var-functions.html">VAR functions</tocitem>
+  <tocitem target="tseries-functions.html">Tseries functions</tocitem>
+  <tocitem target="database-functions.html">Database functions</tocitem>
+  <tocitem target="qreport-functions.html">Quick-report functions</tocitem>
+  <tocitem target="date-and-date-range-functions.html">Date and date range functions</tocitem>
+  <tocitem target="container-functions.html">Container functions</tocitem>
+  <tocitem target="iris-help-and-configuration-functions.html">IRIS help and configuration functions</tocitem>
+  <tocitem target="other-functions.html">Other supporting and auxiliary IRIS functions</tocitem>
+  <tocitem target="hints-and-tips.html">Hints and tips</tocitem>
+
+</tocitem>
+
+</toc>

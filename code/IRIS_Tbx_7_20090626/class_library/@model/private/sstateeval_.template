@@ -1,0 +1,5 @@
+function y = sstateeval_(p,x,index,dx)
+   x(index) = p;
+   y = [$];
+   y = real(y);
+end

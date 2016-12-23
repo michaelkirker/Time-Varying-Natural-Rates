@@ -1,0 +1,1 @@
+function x = minus(a,b), x = binop_(@minus,a,b); end

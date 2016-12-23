@@ -1,0 +1,1 @@
+function range = union_(start1,nper1,start2,nper2), range = min([start1,start2]) : max([start1+nper1,start2+nper2])-1; end

@@ -1,0 +1,1 @@
+function x = ldivide(a,b), x = binop_(@ldivide,a,b); end

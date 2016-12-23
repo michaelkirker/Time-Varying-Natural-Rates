@@ -1,0 +1,21 @@
+* str2dat: support for month-determined dates with other than monthly freq
+
+* bug in VAR (rvar): caused error when called with no optional arguments.
+
+* bug in estimate: caused error when trying to save model object with failed parameterisation.
+
+* estimate returns delta as a struct (not array as before).
+
+* new irisparser class to handle all types of codes
+
+* bug in model get/set: labels, eqtn
+
+* bug in VAR/forecast -- disabled temporarily
+
+* VAR/simulate works with plan
+
+* VAR/subsasgn
+
+* VAR/forecast produces a struct with .mean, .mse, .std
+
+* bug in reporting: multivariate series produced error 

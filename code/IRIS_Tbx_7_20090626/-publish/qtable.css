@@ -1,0 +1,51 @@
+table {
+   border-top: 1px solid;
+   border-bottom: 1px solid;
+   border-collapse: separate;
+   border-spacing: 0em;
+   empty-cells: show;
+   margin: 0.5em;
+}
+caption {
+   margin: 0.5em 0.5em 0.5em 1em;
+   font-weight: bold;
+   font-size: 120%;
+   text-align: left;
+}
+td {
+   margin: 0px;
+   padding: 0.2em 0.4em 0.2em 0.4em; /* top right bottom left */
+}
+td.new-page-separator {
+   border-top: 3px double;
+   border-color: red;
+   font-size: 0pt;
+}
+td.new-page {
+   color: red;
+   font-weight: bold;
+}
+td.new-panel {
+   border-top: 3px double;
+   border-color: blue;
+   font-size: 1pt;
+}
+td.end-of-panel {
+   border-bottom: 1px dotted;
+}
+td.text {
+   white-space: nowrap;
+}
+td.date {
+   text-align: right;
+/*   border-bottom: 1px solid; */
+}
+td.numeric {
+   text-align: right;
+}
+td.title {
+   font-weight: bold;
+}
+td.highlight {
+   background-color: #cccccc;
+}

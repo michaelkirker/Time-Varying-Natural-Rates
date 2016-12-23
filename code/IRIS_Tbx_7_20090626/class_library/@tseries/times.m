@@ -1,0 +1,1 @@
+function x = times(x,y), x = binop_(@times,x,y); end

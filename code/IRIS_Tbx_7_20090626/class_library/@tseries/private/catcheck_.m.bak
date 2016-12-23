@@ -1,0 +1,46 @@
+function [outputs,ixtseries] = catcheck_(varargin)
+%
+% TSERIES/PRIVATE/CATCHECK_  Concatenation check.
+%
+% The IRIS Toolbox 2007/05/09. Copyright 2007 <a href="mailto:jaromir.benes@gmail.com?subject=The%20IRIS%20Toolbox%3A%20%5Byour%20subject%5D">Jaromir Benes</a>. <a href="www.iris-toolbox.com">www.iris-toolbox.com</a>
+
+% ###########################################################################################################
+%% function body
+
+% non-tseries inputs
+try
+  ixtseries = cellfun(@istseries,varargin);
+  ixnumeric = cellfun(@isnumeric,varargin);
+catch
+  ixtseries = cellfun('isclass',varargin,'tseries');
+  ixnumeric = cellfun('isclass',varargin,'double') | cellfun('isclass',varargin,'single') | cellfun('isclass',varargin,'logical');
+end
+remove = ~ixtseries & ~ixnumeric;
+
+% remove non-tseries or non-numeric inputs and display warning
+if any(remove)
+  warning('Non-tseries and non-numeric inputs removed from concatenation.');
+  varargin(remove) = [];
+  ixtseries(remove) = [];
+  ixnumeric(remove) = [];
+end
+
+% check frequencies
+freq = zeros(size(varargin));
+freq(~ixtseries) = Inf;
+for i = find(ixtseries)
+  freq(i) = datfreq(varargin{i}.start);
+end
+ixnan = isnan(freq);
+%freq(isnan(freq)) = [];
+if sum(~ixnan & ixtseries) > 1 && any(diff(freq(~ixnan & ixtseries)) ~= 0)
+  error('Unable to splice tseries with different frequencies.');
+elseif all(ixnan | ~ixtseries)
+  freq(:) = 0;
+else
+  freq(ixnan & ixtseries) = freq(find(~ixnan & ixtseries,1));
+end
+outputs = varargin;
+
+end
+% end of primary function

@@ -1,0 +1,1 @@
+function x = ge(a,b), x = binop_(@ge,a,b); end

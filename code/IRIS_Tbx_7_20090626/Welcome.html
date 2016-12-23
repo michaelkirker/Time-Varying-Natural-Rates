@@ -1,0 +1,123 @@
+<html>
+
+<head>
+
+<title>Welcome to The IRIS Toolbox.</title>
+
+<style type="text/css">
+
+body {
+   color: #333;
+   background-color: white;
+   font-family: Calibri, Arial, Helvetica, Sans-Serif;
+   font-size: 1.2em;
+}
+
+.header {
+   text-align: center;
+   margin: 1em 0em 1em 0em;
+   background-image: url(Background.png);
+}
+
+.siteTitle {
+   color: #069;
+   font-weight: bold;
+   font-family: Calibri, Arial, Helvetica, Sans-Serif;
+   font-size: 2.5em;
+   letter-spacing: 0.15em;
+}
+
+.siteSubtitle {
+   color: #069;
+   font-family: Calibri, Arial, Helvetica, Sans-Serif;
+   font-size: 1.5em;
+   font-weight: bold;
+   letter-spacing: 0.15em;
+}
+
+.grayTitle {
+   color: #666;
+   font-weight: normal;
+}
+
+.nonTitle {
+   font-size: 1.2em;
+   margin: 2em 3em 0em 3em;
+}
+
+.inlineCode {
+   font-family:  Monospace;
+   font-size: 0.9em;
+   font-weight: bold;
+   color: #900;
+}
+
+.emphasis {
+   color: #900;
+}
+
+.block {
+   margin-top: 1em;
+}
+
+.copyright {
+   font-size: 0.8em;
+   text-align: center;
+   margin-top: 2em;
+}
+
+a {
+   color: #069;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+   <span class="siteSubtitle">Welcome to</span><br/>
+   <span class="siteTitle"><span class="grayTitle">The</span>IRIS<span class="grayTitle">Toolbox</span></span><br/>
+   <span class="siteSubtitle"><span class="grayTitle">Version 7.20090626</span></span>
+</div>
+
+<div class="nonTitle">
+
+<ol>
+
+<li class="block">To start an IRIS session, 
+<ul>
+<li>either run <span class="inlineCode">irisstartup;</span> in the Matlab command window,</li>
+<li>or press the Matlab Start button (bottom left in the Matlab window), and go to <span class="emphasis">Link and Targets &rarr; The IRIS Toolbox &rarr; Start IRIS session.</li>
+</ul>
+<p>
+If Matlab failed to save IRIS on the permanent search path during installation, you will need to run the following two commands each time you want to start working with IRIS: <span class="inlineCode">addpath C:\IRIS_Tbx; irisstartup;</span> where you replace <span class="inlineCode">C:\IRIS_Tbx</span> with your IRIS directory.
+</p>
+</li>
+
+<li class="block">To finish an IRIS session, and temporarily remove IRIS files from the Matlab search path,
+<ul>
+<li>either run <span class="inlineCode">irisremove;</span> in the Matlab command window,</li>
+<li>or press the Matlab Start button (bottom left in the Matlab window), and go to <span class="emphasis">Link and Targets &rarr; The IRIS Toolbox &rarr; Stop IRIS session.</li>
+</ul>
+</li>
+
+<li class="block">IRIS automatically detects <span class="emphasis">TeX/LaTeX</span> (using TeX's standard <span class="inlineCode">kpsewhich</span> program), provided it is properly installed on your computer. There is no need to manually link TeX/LaTeX with IRIS any longer.
+</li>
+
+<li class="block">Courtesy of the U.S. Census Bureau, the <span class="emphasis">X12-ARIMA</span> program, Version 0.3 Build 177, is incorporated and redistributed with IRIS. There is no need to manually download, install and link X12 with IRIS any longer.
+</li>
+
+<li class="block">You can customise the Matlab Editor so that your IRIS files (such as model codes, steady-state codes, and quick-report files) get syntax-highlighted. Close the Matlab Editor, open Matlab's <a href="matlab: preferences('Editor/Debugger')">File &rarr; Preferences &rarr; Editor/Debugger</a> menu and go to the Language options. Make sure that the very first Language pop-up menu at the top of the window says "M". At the bottom of this window, you can now add the extensions you want to use with your IRIS model codes; they will appear underneath the standard "m". You can, in fact, add any extensions you will use for IRIS model codes, steady-state codes, and quick-report files (such as "model", "sstate", "q"). Note that there is no restriction on which extensions you use with your model code filenames in IRIS.
+</li>
+
+</ol>
+
+<div class="copyright">Copyright &copy; 2007&minus;2009 Jaromir Benes.</div>
+
+</div>
+
+</body>
+
+</html>

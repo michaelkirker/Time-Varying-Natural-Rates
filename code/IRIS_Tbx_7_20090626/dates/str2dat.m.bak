@@ -1,0 +1,229 @@
+   function dat = str2dat(string,varargin)
+%
+% <a href="dates/str2dat">STR2DAT</a>  Convert cell array of string(s) to IRIS serial date number(s).
+%
+% Syntax:
+%   dat = str2dat(s,...)
+% Output arguments:
+%   dat [ numeric ] IRIS serial date numbers.
+% Required input arguments:
+%   s [ cellstr ] Cell array of strings with dates.
+% <a href="options.html">Options:</a>
+%   'dateformat' [ char | <a href="default.html">'YYYYFPP'</a> ] Format of date strings.
+%   'freq' [ numeric \ <a href="default.html">empty</a> ] Enforced frequency.
+%   'freqletters' [ char | <a href="default.html">'YZQBM'</a> ] Letters to represent frequencies: annual, semi-annual, quarterly, bimonthly, monthly.
+%
+% The IRIS Toolbox 2007/05/03. Copyright 2007 Jaromir Benes. <a href="www.iris-toolbox.com">www.iris-toolbox.com</a>
+%
+
+freqletters = irisget('freqletters');
+
+oldSyntax = false;
+
+if nargin > 1 && ~strcmp(varargin{1},'freqletters') && ~strcmp(varargin{1},'dateformat')
+  options.freqletters = varargin{1};
+else
+	default = {
+    'dateformat','YFP',...
+    'freq',[],...
+	 'freqletters',freqletters,...
+	};
+	options = passopt(default,varargin{:});
+end
+
+% ###########################################################################################################
+%% function body
+
+if ~isa(options.freqletters,'char') || length(options.freqletters) ~= 4
+  options.freqletters = freqletters;
+end
+
+if ischar(string)
+  string = {string};
+end
+
+if isempty(string)
+  dat = nan(size(string));
+  return
+end
+
+pattern = pattern_();
+tokens = regexpi(string,pattern,'names','once');
+[year,per,freq] = guessfreq_(tokens,options);
+dat = datcode(year,per,freq);
+
+% try indeterminate frequency
+index = vech(find(isnan(dat(:))));
+for i = index
+  aux = round(str2num(string{i}));
+  if ~isempty(aux)
+    dat(i) = aux;
+  end
+end
+
+% end of function body
+
+% ###########################################################################################################
+%% nested function pattern_()
+
+function x = pattern_()
+  x = upper(options.dateformat);
+  x = regexprep(x,'[\.\+\{\}\(\)]','\$0');
+  x = strrep(x,'YYYY','(?<longyear>\d{4})');
+  x = strrep(x,'YY','(?<shortyear>\d{2})');
+  x = strrep(x,'Y','(?<shortyear>\d*)');
+  x = strrep(x,'PP','(?<longperiod>\d{2})');
+  x = strrep(x,'P','(?<shortperiod>\d*)');
+  x = strrep(x,'F',sprintf('(?<freqletter>[%s])',options.freqletters));
+  x = strrep(x,'MMMM','(?<longmonth>january|february|march|april|may|june|july|august|september|october|november|december)');
+  x = strrep(x,'MMM','(?<shortmonth>jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)');
+  x = strrep(x,'R','(?<romanperiod>i|ii|iii|iv|v|vi|vii|viii|ix|x|xi|xii)');
+  x = strrep(x,'I','(?<indeterminate>\d+)');
+end  
+% end of nested function pattern_()
+
+end
+% end of primary function
+
+% ###########################################################################################################
+%% subfunction guessfreq_()
+function [year,per,freq] = guessfreq_(tokens,options)
+
+  freqvec = [1,2,4,6,12];
+  freq = nan(size(tokens));
+  per = nan(size(tokens));
+  year = nan(size(tokens));
+  for i = 1 : length(tokens)
+    if length(tokens{i}) ~= 1
+      continue
+    end
+    if isfield(tokens{i},'indeterminate') && ~isempty(tokens{i}.indeterminate)
+      freq(i) = 0;
+      per(i) = str2num(tokens{i}.indeterminate);
+      continue
+    end
+    if isfield(tokens{i},'longmonth') && ~isempty(tokens{i}.longmonth)
+      freq(i) = 12;
+    end
+    if isfield(tokens{i},'shortmonth') && ~isempty(tokens{i}.shortmonth)
+      freq(i) = 12;
+    end
+    if isfield(tokens{i},'freqletter') && ~isempty(tokens{i}.freqletter)
+      freqi = freqvec(upper(options.freqletters) == upper(tokens{i}.freqletter));
+      if ~isempty(freqi)
+        freq(i) = freqi;
+      end
+    end
+    try
+      yeari = str2num(tokens{i}.shortyear);
+      if ~isempty(yeari)
+        year(i) = yeari;
+      end
+    end
+    try
+      yeari = str2num(tokens{i}.longyear);
+      if ~isempty(yeari)
+        year(i) = yeari;
+      end
+    end
+    try
+      peri = str2num(tokens{i}.shortperiod);
+      if isempty(peri)
+        % if shortperiod is not found, set period to 1
+        % to e.g. match YYYYFP with 2000Y
+        per(i) = 1;
+      else
+        per(i) = peri;
+      end
+    end
+    try
+      peri = str2num(tokens{i}.longperiod);
+      if ~isempty(peri)
+        per(i) = peri;
+      end
+    end
+    try
+      peri = roman2per_(tokens{i}.romanperiod);
+      if ~isempty(peri);
+        per(i) = peri;
+      end
+    end
+    try
+      peri = shortmonth2per_(tokens{i}.shortmonth);
+      if ~isempty(peri);
+        per(i) = peri;
+      end
+    end
+    try
+      peri = longmonth2per_(tokens{i}.longmonth);
+      if ~isempty(peri);
+        per(i) = peri;
+      end
+    end
+    if ~isempty(options.freq)
+      if length(options.freq) == 1 && any(options.freq == freqvec)
+        freq(i) = options.freq;
+      elseif length(options.freq(:)) == length(tokens) && any(options.freq(i) == freqvec)
+        freq(i) = options.freq(i);
+      end
+    end
+  end % of for
+  if all(isnan(freq))
+    maxper = max(per(~isnan(per)));
+    if isempty(maxper)
+      freq(:) = 1;
+    else
+      switch maxper
+      case 1, freq(:) = 1;
+      case 2, freq(:) = 2;
+      case {3,4}, freq(:) = 4;
+      case {5,6}, freq(:) = 6;
+      case {7,8,9,10,11,12}, freq(:) = 12;
+      end % of switch
+    end % of if
+  end % of if
+
+end 
+% end of subfunction struct2dat_()
+
+% ###########################################################################################################
+%% subfunction shortmonth2per_()
+
+function per = shortmonth2per_(shortmonth)
+
+list = {'jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'};
+per = find(strcmpi(shortmonth,list));
+if isempty(per)
+   per = NaN;
+end
+
+end
+% end of subfunction shortmonth2per_()
+
+% ###########################################################################################################
+%% subfunction longmonth2per_()
+
+function per = longmonth2per_(longmonth) 
+
+list = {'january','february','march','april','may','june','july','august','september','october','november','december'};
+per = find(strcmpi(longmonth,list));
+if isempty(per)
+   per = NaN;
+end
+
+end
+% end of subfunction longmonth2per_()
+
+% ###########################################################################################################
+%% subfunction roman2per_()
+
+function per = roman2per_(romanper) 
+
+list = {'i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii'};
+per = find(strcmpi(romanper,list));
+if isempty(per)
+   per = NaN;
+end
+
+end
+% end of subfunction roman2per_()

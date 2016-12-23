@@ -1,0 +1,1 @@
+function x = gt(a,b), x = binop_(@gt,a,b); end

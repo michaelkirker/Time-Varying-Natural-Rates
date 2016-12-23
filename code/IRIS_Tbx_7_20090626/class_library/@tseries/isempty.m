@@ -1,0 +1,1 @@
+function flag = isempty(x), flag = isempty(x.data); end

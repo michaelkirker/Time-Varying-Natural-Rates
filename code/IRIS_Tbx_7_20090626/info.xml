@@ -1,0 +1,40 @@
+<productinfo
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="optional">
+<?xml-stylesheet type="text/xsl" href="optional"?>
+
+<matlabrelease>R2007a</matlabrelease>
+<name>The IRIS Toolbox</name>
+<type>links_targets</type>
+<icon>./-Help/IRIS_favicon.gif</icon>
+<help_location>./-Help</help_location>
+
+<list>
+
+<listitem>
+<label>Start IRIS session</label>
+<callback>irisstartup();</callback>
+<icon>../-Help/Green_Circle.gif</icon>
+</listitem>
+
+<listitem>
+<label>Stop IRIS session</label>
+<callback>irisremove();</callback>
+<icon>../-Help/Red_Circle.gif</icon>
+</listitem>
+
+<listitem>
+<label>Remove IRIS permanently from Matlab</label>
+<callback>irisremove('removeroot',true);</callback>
+<icon>../-Help/Remove.gif</icon>
+</listitem>
+
+<listitem>
+<label>Visit http://www.iris-toolbox.com</label>
+<callback>web http://www.iris-toolbox.com -browser;</callback>
+<icon>../-Help/Go_To.gif</icon>
+</listitem>
+
+</list>
+
+</productinfo>

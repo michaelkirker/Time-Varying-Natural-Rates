@@ -1,0 +1,245 @@
+function qtable(cdfname,htmlfname,data,range,varargin)
+%
+% QTABLE  Quick HTML table.
+%
+% Syntax:
+%    [hfig,hax,hline] = qplot(cdfname,htmlname,d,range)
+% Output arguments:
+%    hfig [ numeric ] Handles to figures created by QPLOT.
+%    hax [ numeric ] Handles to axes created by QPLOT.
+%    hline [ cell ] Handles to lines created by QPLOT.
+% Required input arguments:
+%    cdfname [ char ] Contents definition file name.
+%    htmlname [ char ] HTML output filename.
+%    d [ cell | struct ] Database or cell array of databases with input data.
+%    range [ numeric ] Time range, i.e. <a href="dates.html">IRIS serial date numbers</a>.
+% <a href="options.html">Optional input arguments:</a>
+%    'caption' [ char | <a href="default.html">empty</a> ] Table caption.
+%    'format' [ char | <a href="default.html">'%.2f'</a> ] Format for displaying numbers.
+%    'nan' [ char | <a href="default.html">'...'</a> ] String to represent NaNs.
+%    'open' [ <a href="default.html">true</a> | false ] Open table in Matlab web browser.
+% The IRIS Toolbox 2008/02/20. Copyright 2007-2008 Jaromir Benes. <a href="http://www.iris-toolbox.com">www.iris-toolbox.com</a>
+%
+
+default = {...
+   'caption','',@ischar,...
+   'format','%.2f',@ischar,...
+   'nan','...',@ischar,...
+   'open',true,@islogical,...
+};
+options = passvalopt(default,varargin{:});
+
+if ~iscell(data)
+   data = {data};
+   datalegend = {''};
+elseif all(cellfun(@isstruct,data))
+   data = vech(data);
+   datalegend = cell(size(data));
+   datalegend(:) = {''};
+elseif all(cellfun(@(x) isstruct(x) || ischar(x),data))
+   % split input data into databases and legends
+   index = cellfun(@isstruct,data);
+   datalegend = {};
+   for i = vech(find(index)) - 1
+      if i > 0 && ischar(data{i})
+         datalegend(end+1) = data(i);
+      else
+         datalegend(end+1) = {''};
+      end
+   end
+   data = vech(data(index));
+end
+
+if ~isstruct(data) && ~(iscell(data) && all(cellfun(@isstruct,data)))
+   error('Input argument "data" must be a database or a cell array of databases.');
+end
+
+% ###########################################################################################################
+%% function body
+
+% read HTML template
+html = regexp(file2char([mfilename('fullpath'),'.m']),'%\{\s*(<html>.*</html>)\s*%\}','tokens','once');
+html = strrep(html{1},char(13),'');
+
+% read CDF
+[gd,sub] = readcdf(cdfname);
+
+if isempty(gd)
+   return
+end
+
+gd(end).break = false; % make sure no new table opens after last row
+
+code = '<table>';
+if ~isempty(options.caption)
+   code = [code,'<caption>',options.caption,'</caption>'];
+end
+code = [code,adddates_(range)];
+ngraph = length(gd);
+for i = 1 : ngraph
+   x = {};
+   n = length(gd(i).formula);
+   for j = 1 : length(data)
+      aux = cell([1,n]);
+      [aux{1:n}] = dbeval(data{j},gd(i).formula{:});
+      x{end+1} = [aux{:}];
+   end
+   try
+     code = [code,addrow_(x,range,gd(i).title,gd(i).legend,datalegend,gd(i).break,options)];
+   catch
+     formula = sprintf('%s ',gd(i).formula{:});
+     last = lasterror();
+     warning('Error when adding row "%s".\nMatlab sais: %s',formula(1:end-1),last.message);
+   end
+end
+code = [code,'</table>'];
+
+html = strrep(html,'!contents',code);
+char2file(html,htmlfname);
+
+if options.open
+   web(htmlfname);
+end
+
+end
+% end of primary function
+
+% ###########################################################################################################
+%% subfunction readgdf_()
+
+
+% end of subfunction readgdf_()
+
+% ###########################################################################################################
+%% subfunction adddates_()
+
+function tr = adddates_(range);
+
+x = dat2str(range,'dateformat','YYYY:P');
+tr = '<tr><td class="date"></td><td class="date"></td>';
+tr = [tr,sprintf(['<td class="date">%s</td>'],x{:})];
+tr = [tr,'</tr>'];
+
+end
+% end of subfunctiono adddates_()
+
+% ###########################################################################################################
+%% subfunction addrow_()
+
+function code = addrow_(x,range,title,legend,datalegend,isbreak,options);
+
+nper = length(range);
+ncol = 2 + nper;
+nx = length(x);
+code = '';
+for i = 1 : nx
+   data = transpose(x{i}(range,:));
+   nrow = size(data,1);
+   for j = 1 : nrow
+      tr = '<tr>';
+      if i == 1 && j == 1
+         tr = [tr,'<td class="first-cell !class">',title,'</td>'];
+      else
+         tr = [tr,'<td class="!class"></td>'];
+      end
+      tr = [tr,'<td class="second-cell !class">',legend{j},'</td>'];
+      % print data
+      aux = sprintf(['<td class="numeric !class">',options.format,'</td>'],data(j,:));
+      aux = strrep(aux,'NaN',options.nan);
+      tr = [tr,aux,'</tr>'];
+      % determine CSS classes 
+      css_class = '';
+      if j == nrow
+         css_class = [css_class,' panel'];
+      end
+      if i == nx && j == nrow && isbreak
+         css_class = [css_class,' break'];
+      end
+      tr = strrep(tr,'!class',css_class);
+      % add this row to output code
+      code = [code,tr];
+   end
+end
+
+end
+% end of subfunctiono addrow_()
+
+% ###########################################################################################################
+%% Contents Definition File (CDF) syntax
+
+%{
+   #NxN subplot
+   ?-- new graph
+   <<-->> force page break
+
+   E.g.
+
+   #2x2
+
+   ?-- Inflation
+   "Headline" 400*dot_Pc
+   'TR' 400*dot_Pt
+
+   ?-- Sacrifice ratio
+   25*cumsum(log(C))
+
+   <<-->>
+
+   ?-- Inflation
+   "Headline" 400*dot_Pc
+   "NT" 400*dot_Pn
+%}
+
+%{ 
+   alternative syntax
+   !-- new graph / new table row
+   !++ new page
+%}
+
+%{
+<html>
+<head>
+<style type="text/css">
+table {
+   border: 1px solid;
+   border-collapse: separate;
+   border-spacing: 0em;
+   empty-cells: show;
+   margin: 0.5em;
+}
+caption {
+   margin: 0.5em 0.5em 0.5em 1em;
+   font-weight: bold;
+   font-size: 120%;
+   text-align: left;
+}
+td {
+   margin: 0px;
+   padding: 0.2em 0.4em 0.2em 0.4em; /* top right bottom left */
+}
+td.break {
+   border-bottom: 1px solid;
+}
+td.panel {
+   border-bottom: 1px dotted;
+}
+td.first-cell {
+   white-space: nowrap;
+}
+td.second-cell {
+   white-space: nowrap;
+}
+td.date {
+   text-align: right;
+   border-bottom: 1px solid;
+}
+td.numeric {
+   text-align: right;
+}
+</style>
+</head>
+<body>
+!contents
+</body>
+</html>
+%}

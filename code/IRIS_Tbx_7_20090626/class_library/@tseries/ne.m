@@ -1,0 +1,1 @@
+function x = ne(x,y), x = binop_(@ne,x,y); end

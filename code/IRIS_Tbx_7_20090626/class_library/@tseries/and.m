@@ -1,0 +1,1 @@
+function x = and(a,b), x = binop_(@and,a,b); end

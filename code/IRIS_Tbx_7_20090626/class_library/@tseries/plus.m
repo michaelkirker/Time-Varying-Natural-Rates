@@ -1,0 +1,1 @@
+function x = plus(x,y), x = binop_(@plus,x,y); end

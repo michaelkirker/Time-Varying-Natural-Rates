@@ -1,0 +1,1 @@
+function x = power(x,y), x = binop_(@power,x,y); end
