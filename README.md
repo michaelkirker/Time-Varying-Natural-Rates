@@ -4,6 +4,12 @@ This repository contains the model code, estimation code, and example data for t
 
 This code is designed to run in Matlab 2016b using version 7.20090626 of the [IRIS toolbox](https://iristoolbox.codeplex.com/ "IRIS Toolbox"). This specific version of the IRIS toolbox is included in the repository.
 
+## Disclaimer(s) ##
+
+This model does not necessarily reflect the views of the Reserve Bank of New Zealand. Due to historical data revisions, the results from this model may differ slightly from those published in the working paper.
+
+
+
 
 ## Contact details ##
 
@@ -57,7 +63,7 @@ While the model in this repository is identical to the one used to produce the r
 
 	
 
-## IRIS Toolbox License##
+## IRIS Toolbox License ##
 
 This repository includes an older version of the [IRIS toolbox](https://iristoolbox.codeplex.com/ "IRIS Toolbox"). The licensing details of the IRIS toolbox are as follows:
 
